@@ -54,7 +54,7 @@ const Agent = ({ userName }: AgentProps) => {
                         <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !== 'CONNECTING' & 'hidden')}
                         />
                         <span>
-                            {callStatus === 'INACTIVE' || callStatus === 'FINISHED' ? 'Call' : '. . . '}
+                            {callStatus === 'INACTIVE' || callStatus === 'FINISHED' ? 'Interview' : '. . . '}
                         </span>
                     </button>
                 ) : (
