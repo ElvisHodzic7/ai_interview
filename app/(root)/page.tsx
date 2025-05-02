@@ -4,8 +4,22 @@ import React from 'react'
 import Image from 'next/image'
 import { dummyInterviews } from '@/constants'
 import InterviewCard from '../components/InterviewCard'
+import { getCurrentUser, getInterviewByUserId, getLatestInterviews } from '@/lib/actions/auth.actions'
 
-const page = () => {
+const page = async () => {
+  const user = await getCurrentUser();
+
+  const [] = await Promise.all([
+    await getInterviewByUserId(user?.id!),
+    await getLatestInterviews({ userId: user?.id! })
+  ])
+
+  const userInterviews = await getInterviewByUserId(user?.id!);
+  const zadnjiInterviewi = await getLatestInterviews({ userId: user?.id! });
+
+  const buduciInterviewi = zadnjiInterviewi?.length > 0;
+
+  const prosliInterview = userInterviews?.length > 0;
   return (
     <>
       <section className='card-cta'>
@@ -29,10 +43,15 @@ const page = () => {
           Tvoj Interview
         </h2>
         <div className='interviews-section'>
-          {dummyInterviews.map((interview) => (
-            <InterviewCard {...interview} key={interview.id} />
-          ))}
-          {/* <p>Nisi imao nijedan Interview do sad</p> */}
+          {prosliInterview ? (
+            userInterviews?.map((interview) => (
+              <InterviewCard {...interview} key={interview.id} />
+            ))
+          ) : (
+            <p>Nisi imao nijedan Interview do sad</p>
+          )}
+
+
         </div>
       </section>
 
@@ -41,10 +60,13 @@ const page = () => {
           Prisustvuj Interview-u
         </h2>
         <div className='interviews-section'>
-          {dummyInterviews.map((interview) => (
-            <InterviewCard {...interview} key={interview.id} />
-          ))}
-
+          {buduciInterviewi ? (
+            zadnjiInterviewi?.map((interview) => (
+              <InterviewCard {...interview} key={interview.id} />
+            ))
+          ) : (
+            <p>Trenutno nema dostupno novih interview-a.</p>
+          )}
         </div>
       </section>
 
